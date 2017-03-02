@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="partner_bank_form_inherit" model="ir.ui.view">
+      <field name="model">res.partner.bank</field>
+      <field name="inherit_id" ref="base.view_partner_bank_form"/>
+      <field name="arch" type="xml">
+
+        <field name="acc_number" position="after">
+          <field name="bank_client_id"/>
+        </field>
+
+      </field>
+    </record>
+
+
+    <record id="banking_export_paymul_wizard_form" model="ir.ui.view">
+      <field name="model">banking.export.paymul.wizard</field>
+      <field name="arch" type="xml">
+
+        <form string="Paymul Export">
+          <group>
+            <field name="execution_date"/>
+            <field name="reference"/>
+          </group>
+          <footer>
+            <button string="Export" name="do_export" type="object"
+                    class="oe_highlight"/>
+            or
+            <button string="Cancel" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+
+      </field>
+    </record>
+
+
+    <record id="banking_export_paymul_download_wizard_form" model="ir.ui.view">
+      <field name="model">banking.export.paymul.download.wizard</field>
+      <field name="arch" type="xml">
+
+        <form string="Paymul File Download">
+          <group>
+            <field name="total_amount"/>
+            <field name="no_transactions"/>
+            <field name="execution_date"/>
+            <field name="payment_file_name" invisible="1"/>
+            <field name="payment_file" filename="payment_file_name"/>
+          </group>
+          <footer>
+            <button string="Finish" name="do_save" type="object"
+                    class="oe_highlight"/>
+            or
+            <button string="Cancel" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+
+      </field>
+    </record>
+
+
+
+  </data>
+</openerp>
+<!-- vim: set ts=2 sw=2: -->

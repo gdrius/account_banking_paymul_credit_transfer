@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="1">
+
+    <record id="bank_paymul_identifier_type" model="ir.sequence.type">
+      <field name="name">Paymul File Identifier Type</field>
+      <field name="code">bank.paymul.identifier</field>
+    </record>
+
+    <record id="bank_paymul_identifier_seq" model="ir.sequence">
+      <field name="name">Paymul File Identifier</field>
+      <field name="code">bank.paymul.identifier</field>
+      <field name="prefix">PML</field>
+      <field name="padding">12</field>
+      <field name="number_next">1</field>
+      <field name="company_id" eval="False"/>
+    </record>
+
+    <record model="payment.mode.type" id="export_acm_or_ezone">
+      <field name="name">ACH or EZONE</field>
+      <field name="code">not used</field>
+      <field name="suitable_bank_types"
+             eval="[(6,0,[ref('base_iban.bank_iban'),ref('base.bank_normal'),])]" />
+      <field name="ir_model_id"
+             ref="account_banking_paymul_credit_transfer.model_banking_export_paymul_wizard"/>
+    </record>
+
+
+    <record model="payment.mode.type" id="export_faster_payment">
+      <field name="name">Faster Payment</field>
+      <field name="code">not used</field>
+      <field name="suitable_bank_types"
+             eval="[(6,0,[ref('base.bank_normal'),])]" />
+      <field name="ir_model_id"
+             ref="account_banking_paymul_credit_transfer.model_banking_export_paymul_wizard"/>
+    </record>
+
+
+    <record model="payment.mode.type" id="export_priority_payment">
+      <field name="name">Priority Payment</field>
+      <field name="code">not used</field>
+      <field name="suitable_bank_types"
+             eval="[(6,0,[ref('base_iban.bank_iban'),ref('base.bank_normal'),])]" />
+      <field name="ir_model_id"
+             ref="account_banking_paymul_credit_transfer.model_banking_export_paymul_wizard"/>
+    </record>
+
+  </data>
+</openerp>
+<!-- vim: set ts=2 sw=2: -->
