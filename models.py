@@ -63,11 +63,11 @@ class PaymentLine(models.Model):
 
     _inherit = 'payment.line'
 
-    info_owner = fields.Text(compute='_get_info_owner')
-    info_partner = fields.Text(compute='_get_info_partner')
+    info_owner = fields.Text(compute='_compute_info_owner')
+    info_partner = fields.Text(compute='_compute_info_partner')
 
     @api.model
-    def _get_info_bank_partner(self, bank_account):
+    def _get_info_partner(self, bank_account):
         if not bank_account or not bank_account.partner_id:
             return ''
         partner = bank_account.partner_id
@@ -81,15 +81,15 @@ class PaymentLine(models.Model):
         return '\n'.join((name, street, zip_city, country_name))
 
     @api.depends('order_id.mode')
-    def _get_info_owner(self):
+    def _compute_info_owner(self):
         for line in self:
-            line.info_owner = self._get_info_bank_partner(
+            line.info_owner = self._get_info_partner(
                 line.order_id.mode.bank_id)
 
     @api.depends('bank_id')
-    def _get_info_partner(self):
+    def _compute_info_partner(self):
         for line in self:
-            line.info_partner = self._get_info_bank_partner(line.bank_id)
+            line.info_partner = self._get_info_partner(line.bank_id)
 
 
 class ResPartnerBank(models.Model):
