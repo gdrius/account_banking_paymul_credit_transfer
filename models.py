@@ -272,7 +272,8 @@ class BankingExportPaymulWizard(models.TransientModel):
             raise exceptions.ValidationError(
                 _("Invalid payment type mode for HSBC '%s'") % payment_type)
 
-        if not line.info_partner:
+        address = self.env['payment.line']._get_info_partner(line.bank_id)
+        if not address:
             raise exceptions.ValidationError(
                 _("No default address for transaction '%s'") % line.name)
 
@@ -280,7 +281,7 @@ class BankingExportPaymulWizard(models.TransientModel):
         return paymul.Transaction(amount=Decimal(str(line.amount_currency)),
                                   currency=line.currency.name,
                                   account=dest_account, means=means,
-                                  name_address=line.info_partner,
+                                  name_address=address,
                                   customer_reference=line.name,
                                   payment_reference=line.name, charges=charges)
 
@@ -302,13 +303,14 @@ class BankingExportPaymulWizard(models.TransientModel):
                   "account number (not IBAN): %s") % ustr(type(src_account)))
 
         logger.info('Create transactions...')
-        transactions = map(self._create_transaction, payment.line_ids)
+        transactions = map(self._create_transaction, payment.bank_line_ids)
 
         batch = paymul.Batch(
             exec_date=fields.Date.from_string(wizard.execution_date),
             reference=wizard.reference,
             debit_account=src_account,
-            name_address=payment.line_ids[0].info_owner)
+            name_address=self.env['payment.line']._get_info_partner(
+                bank_account))
         batch.transactions = transactions
 
         ref = self.env['ir.sequence'].next_by_code('bank.paymul.identifier')
