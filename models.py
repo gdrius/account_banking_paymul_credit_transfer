@@ -21,6 +21,7 @@
 ##############################################################################
 import logging
 import base64
+import re
 from datetime import date
 from decimal import Decimal
 from openerp import api, models, fields, exceptions, workflow
@@ -278,12 +279,14 @@ class BankingExportPaymulWizard(models.TransientModel):
                 _("No default address for transaction '%s'") % line.name)
 
         charges = self._get_transaction_charges(dest_account)
+        ref = re.sub(r'[^A-Za-z0-9 ]', ' ', line.communication)
         return paymul.Transaction(amount=Decimal(str(line.amount_currency)),
                                   currency=line.currency.name,
                                   account=dest_account, means=means,
                                   name_address=address,
                                   customer_reference=line.name,
-                                  payment_reference=line.name, charges=charges)
+                                  payment_reference=ref,
+                                  charges=charges)
 
     @api.multi
     def do_export(self):
